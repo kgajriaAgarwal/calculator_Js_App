@@ -1,0 +1,198 @@
+<!-- JS project to create a calculator -->
+<!DOCTYPE html>
+<html>
+<head>
+	<title>JS calci</title>
+	<link rel="stylesheet" type="text/css" href="StyleClac.css">
+</head>
+<body>
+    <h1>html calculator</h1>
+	<div id="calc-parent">
+		<div class="row">
+			<div class="column" id="calc-display-val">0</div>
+		</div>
+		<!--here we want to create 5 rows-->
+		<!--1st row-->
+		<div class="row">
+			<div class="calc-btn column" id="calc-clear" style="width: 50%">AC</div>
+			<div class="calc-btn column" id="calc-backspace" style="width: 25%">&#8676;</div>
+			<div class="calc-btn calc-btn-operator" id="calc-divide" style="width: 96%; padding-top:4px;">&#247;</div>
+		</div>
+		<!--2nd row : 7 8 9  number btns-->
+		<div class="row">
+			<!--2nd row column:1 column-->
+			<div class="calc-btn calc-btn-num column" id="calc-seven">7</div>
+			<!--2nd row column:2 column-->
+			<div class="calc-btn calc-btn-num column" id="calc-eight">8</div>
+			<!--2nd row column:3 column-->
+			<div class="calc-btn calc-btn-num column" id="calc-nine">9</div>
+			<div class="calc-btn calc-btn-operator column" id="calc-multiply">*</div>
+		</div>
+		<!--3rd row-->
+		<!--3rd row : 4 5 6  number btns-->
+		<div class="row">
+			<div class="calc-btn calc-btn-num column" id="calc-four">4</div>
+			<div class="calc-btn calc-btn-num column" id="calc-five">5</div>
+			<div class="calc-btn calc-btn-num column" id="calc-six">6</div>
+			<div class="calc-btn calc-btn-operator column" id="calc-minus">-</div>
+		</div>
+		<!--4th row-->
+		<!--4th row : 1 2 3 number btns-->
+		<div class="row">
+			<div class="calc-btn calc-btn-num column" id="calc-one">1</div>
+			<div class="calc-btn calc-btn-num column" id="calc-two">2</div>
+			<div class="calc-btn calc-btn-num column" id="calc-three">3</div>
+			<div class="calc-btn calc-btn-operator column" id="calc-plus">+</div>
+		</div>
+		<!--5th row: 0, . ,=-->
+		<div class="row">
+			<div class="calc-btn calc-btn-num column" id="calc-zero" style="width: 26% !important;">0</div>
+			<div class="calc-btn column" id="calc-decimal">.</div>
+			<div class="calc-btn calc-btn-operator column" id="calc-equals">=</div>
+		</div>
+		
+	</div>
+
+	<!--javascript code-->
+	<script type="text/javascript">
+		var oneBtn = document.getElementById("calc-one");
+		var twoBtn = document.getElementById("calc-two");
+		var threeBtn = document.getElementById("calc-three");
+		var fourBtn = document.getElementById("calc-four");
+		var fiveBtn = document.getElementById("calc-five");
+		var sixBtn = document.getElementById("calc-six");
+		var sevenBtn = document.getElementById("calc-seven");
+		var eightBtn = document.getElementById("calc-eight");
+		var nineBtn = document.getElementById("calc-nine");
+		var zeroBtn = document.getElementById("calc-zero");
+
+		var decimalBtn = document.getElementById("calc-decimal");
+		var clearBtn = document.getElementById("calc-clear");
+		var backspaceBtn = document.getElementById("calc-backspace");
+		var displayValElement = document.getElementById("calc-display-val");
+		// var eval = eval(['123', '+', '456'].join(' ')) + '';
+		// console.log("typeof evel = " + typeof eval);
+
+		var displayVal = '0';
+		var pendingVal; //Undefined//5+3 then,5 will become the pending value
+		var evalStringArray = [];//empty array//we will create an array and then pass this in eval function[5+5]
+
+
+		//array of numbers
+		 var calcNumBtns = document.getElementsByClassName("calc-btn-num");
+		var calcOperatorBnts = document.getElementsByClassName("calc-btn-operator");
+
+		//ES6 updateDisplayVal function
+		var updateDisplayVal = (clickObj) => {
+			var btnText = clickObj.target.innerText;
+			console.log("btnText is:"+ typeof btnText); //String --
+
+			if (displayVal === '0')
+				displayVal = ''  //agar  0 hai toh kuch bhi concatenate nahi hona chaiye // 0123 - we dont want theis  0
+			displayVal += btnText; //'2'+ '5' = '25'//string
+			displayValElement.innerText = displayVal;//the value of the concatented string will be shown in the calculator display
+		}
+
+		//perform operation function
+		var performOperation = (clickObj) => {
+			var operator = clickObj.target.innerText;
+
+			//switch case
+			switch(operator){
+				case '+':
+					pendingVal = displayVal;
+					displayVal = '0';
+					displayValElement.innerText = displayVal;
+					evalStringArray.push(pendingVal);
+					console.log("evalStringArray :" + evalStringArray);
+					evalStringArray.push('+');
+
+					break;
+
+				case '-':
+					pendingVal = displayVal;
+					displayVal = '0';
+					displayValElement.innerText = displayVal;
+					evalStringArray.push(pendingVal);
+					console.log("evalStringArray :" + evalStringArray);
+					evalStringArray.push('-');
+					break;
+
+				case '*':
+					pendingVal = displayVal;
+					displayVal = '0';
+					displayValElement.innerText = displayVal;
+					evalStringArray.push(pendingVal);
+					console.log("evalStringArray :" + evalStringArray);
+					evalStringArray.push('*');
+					break;
+
+				case '÷':
+					pendingVal = displayVal;
+					displayVal = '0';
+					displayValElement.innerText = displayVal;
+					evalStringArray.push(pendingVal);
+					console.log("evalStringArray :" + evalStringArray);
+					evalStringArray.push('/');
+					break;
+
+				case '=':
+					evalStringArray.push(displayVal);
+					var evaluation = eval(evalStringArray.join(' '));//here in the js eval function we pass the array and in the array which is in string format we are converting it to number
+					console.log('the evaluation is:' + typeof evaluation);
+					displayVal = evaluation + '';
+					displayValElement.innerText = displayVal;
+					evalStringArray = [];
+
+				default:
+					break;
+
+			}
+		}
+
+
+
+		//for loop on the number buttons
+		for(var i = 0;i<calcNumBtns.length;i++){
+			//console.log("the array:" + calcNumBtns[i].innerText);
+			calcNumBtns[i].addEventListener('click',updateDisplayVal,false);
+		}
+
+		//loop on the ops btns
+		for (var i = 0; i<calcOperatorBnts.length; i++){
+			calcOperatorBnts[i].addEventListener('click',performOperation,false);
+		}
+
+		clearBtn.onclick = () => {
+			displayVal = '0';
+			pendingVal = undefined;
+			evalStringArray = [];
+			displayValElement.innerText = displayVal;
+
+		}
+
+		backspaceBtn.onclick = () => {
+			var lengthOfDisplayVal = displayVal.length;//length of the string '12345' == 5
+			displayVal = displayVal.slice(0,lengthOfDisplayVal-1);
+			console.log("displayVal :" + displayVal);
+
+			if (displayVal === '')
+				displayVal = '0'
+
+			displayValElement.innerText = displayVal;
+		}
+
+		//decimal button
+		decimalBtn.onclick = () => {
+			if(!displayVal.includes('.')){
+				console.log("includes decimal");
+				displayVal += '.';
+				console.log("the value of displayVal" + displayVal);
+			}
+
+			displayValElement.innerText = displayVal;	
+		}
+	</script>
+
+</body>
+</html>
